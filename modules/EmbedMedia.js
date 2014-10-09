@@ -36,15 +36,17 @@ SK.moduleConstructors.EmbedMedia.prototype.init = function() {
 
     if (this.getSetting("startGifWhenOnScreen")) {
 
-        $(window).on("scroll", function() {
+        window.addEventListener("scroll", function() {
             // Pour toutes les webm qui sont complètement chargées
-            $(".gif-webm").each(function() {
-                self.updateWebmStatus($(this));
-            });
-            // Pour tous les GIF qui sont complètement chargés
-            $(".image-media-element.media-element.gif").each(function() {
-                SK.moduleConstructors.EmbedMedia.ManageGifCanvas.swapGifCanvas($(this));
-            });
+            var gifs=document.getElementsByClassName['.gif-webm'];
+			for(var i=0;i<gifs.length;i++){
+					self.updateWebmStatus(gifs[i]);
+			}
+			// Pour tous les GIF qui sont complètement chargés
+			var gifsLoaded=document.getElementsByClassName['.image-media-element.media-element.gif'];
+			for(var i=0;i<gifsLoaded.length;i++){
+					SK.moduleConstructors.EmbedMedia.ManageGifCanvas.swapGifCanvas(gifsLoaded[i]);
+			}     
         });
     }
 
@@ -739,7 +741,7 @@ SK.moduleConstructors.EmbedMedia.prototype.embedMedia = function() {
     var queueCheckLinkForMedia = function($msg, $a) {
 
         self.queueFunction(function() {
-
+			console.log($msg);
             var messageId = $msg.attr("id");
 
             //On parcourt tous les types de medias
@@ -802,19 +804,36 @@ SK.moduleConstructors.EmbedMedia.prototype.embedMedia = function() {
      * Parcourt des posts à la recherche de medias à intégrer,
      * remplacement des liens pas l'intégration du media correspondant
      *  et ajout d'un bouton masquer/afficher au post si nécessaire.
-     */
+     *//*
+	var msg = document.querySelectorAll('.msg');
+	var nbMsg = msg.length;
+	for(var i = 0 ; i < nbMsg ; i++ ){
+		var curMsg = msg[i];
+		var linkMsg = curMsg.querySelectorAll('.post a');
+		if(linkMsg != null){
+			var nbLien = linkMsg.length;
+			for(var indLien = 0; indLien < nbLien; indLien++){
+				//linkMsg.innerHTML="test";
+				queueCheckLinkForMedia(curMsg, linkMsg[indLien]);
+			}
+			
+			//Queue check 
+		}
+		*/ 
+	}
+	/*
     $(".msg").each(function(id, msg) {
-
+		
         var $msg = $(msg);
 
-        //On parcourt tous les liens du post
+        
         $msg.find(".post a").each(function(id, a) {
 
             //Et on cherche chaque type de media
             queueCheckLinkForMedia($msg, $(a));
 
         });
-    });
+    });*/
 };
 
 SK.moduleConstructors.EmbedMedia.prototype.shouldBeActivated = function() {
